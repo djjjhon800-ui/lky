@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浪漫飘字爱心</title>
+    <!-- 防止缓存，保证每次都加载最新版 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #000;
+            overflow: hidden;
+            font-family: "微软雅黑", sans-serif;
+        }
+        .note {
+            position: fixed;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            z-index: 9999;
+            pointer-events: none;
+            animation: breathe 1s ease-in-out infinite alternate;
+        }
+        @keyframes breathe {
+            from { opacity: 0.85; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const texts = [
+            "我想你了！", "天冷了多穿衣服", "好好爱自己", "好好吃饭",
+            "保持好心情", "别熬夜", "多喝水哦", "永远爱你"
+        ];
+        const colors = ['lightblue', 'lightgreen', 'lightpink', 'lemonchiffon', 'white'];
+
+        // 阶段一：满屏飘字（粉色背景+白色字）
+        function stage1() {
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const note = document.createElement('div');
+                    note.className = 'note';
+                    note.textContent = "我想你了！";
+                    note.style.background = "#FFC0CB";
+                    note.style.color = "white";
+                    
+                    let x = Math.random() * (window.innerWidth - 200);
+                    let y = Math.random() * (window.innerHeight - 200);
+                    note.style.left = x + 'px';
+                    note.style.top = y + 'px';
+                    
+                    let dx = (Math.random() - 0.5) * 7;
+                    let dy = (Math.random() - 0.5) * 8;
+                    
+                    document.body.appendChild(note);
+                    
+                    function move() {
+                        x += dx;
+                        y += dy;
+                        
+                        if (x < 0 || x > window.innerWidth - 200) dx = -dx;
+                        if (y < 0 || y > window.innerHeight - 100) dy = -dy * 0.9;
+                        
+                        note.style.left = x + 'px';
+                        note.style.top = y + 'px';
+                        requestAnimationFrame(move);
+                    }
+                    move();
+                }, i * 30);
+            }
+        }
+
+        // 阶段二：爱心成型（彩色背景+黑字）
+        function stage2() {
+            const sw = window.innerWidth;
+            const sh = window.innerHeight;
+            const scale = 170;
+            
+            for (let i = 0; i < 80; i++) {
+                setTimeout(() => {
+                    const t = i / 80 * Math.PI * 2;
+                    const x = sw * 0.5 + scale * 16 * Math.pow(Math.sin(t), 3);
+                    const yBase = 13*Math.cos(t) - 5*Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t);
+                    const y = sh * 0.55 - scale * 0.82 * yBase;
+                    
+                    const note = document.createElement('div');
+                    note.className = 'note';
+                    note.textContent = texts[Math.floor(Math.random() * texts.length)];
+                    note.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    note.style.color = "black";
+                    note.style.left = x + 'px';
+                    note.style.top = y + 'px';
+                    
+                    document.body.appendChild(note);
+                }, i * (i < 40 ? 60 : 40));
+            }
+        }
+
+        // 启动双阶段效果
+        window.onload = () => {
+            stage1();
+            setTimeout(stage2, 12000);
+        }
+    </script>
+</body>
+</html>
